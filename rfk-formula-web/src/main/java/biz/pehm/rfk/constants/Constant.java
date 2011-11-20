@@ -2,27 +2,44 @@ package biz.pehm.rfk.constants;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Properties and behavior shared by all constant.
- * Subclasses should be created by subject area (e.g. density of materials,
+ * Subclasses should be created by subjectArea area (e.g. density of materials,
  * relative mass of materials).
  * @author Alexander Pehm <alexander at pehm.biz>
  */
+@XmlRootElement
 @Entity
 @Table(name="CONSTANT")
-public class AbstractConstant implements Serializable{
+@NamedQuery(name = "findAllConstants", query = "SELECT c FROM Constant c")
+public class Constant implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private BigDecimal constantValue;
-    private String subject;
+	@OneToOne
+    private SubjectArea subjectArea;
     private String description;
-    @Id
+    private String unit;
+    
+    public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
@@ -34,12 +51,12 @@ public class AbstractConstant implements Serializable{
 		this.id = id;
 	}
 
-	public String getSubject() {
-        return subject;
+	public SubjectArea getSubject() {
+        return subjectArea;
     }
 
-    public void getSubject(String subject) {
-        this.subject = subject;
+    public void getSubject(SubjectArea subjectArea) {
+        this.subjectArea = subjectArea;
     }
 
     public String getDescription() {
